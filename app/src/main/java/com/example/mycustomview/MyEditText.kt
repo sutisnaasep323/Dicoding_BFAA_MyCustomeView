@@ -29,7 +29,7 @@ class MyEditText: AppCompatEditText, View.OnTouchListener {
     private fun init(){
         mClearButtonImage = ResourcesCompat.getDrawable(resources,R.drawable.ic_baseline_close_24,null) as Drawable
         setOnTouchListener(this)
-        // menampilkan clear button ketika ada perubahan teks
+        // menampilkan clearbutton ketika ada perubahan teks
         addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
                 // Do nothing.
@@ -44,10 +44,12 @@ class MyEditText: AppCompatEditText, View.OnTouchListener {
     }
     // aksi ketika di klik akan dihapus
     private fun showClearButton() {
-        setCompoundDrawablesWithIntrinsicBounds(null, null,
-            mClearButtonImage, null)
+        // menampilkan gambar pada EditText dengan parameter sebagai berikut (left, top, right, bottom)
+        // Karena itulah pada showClearButton kita memasukkan gambar pada parameter ketiga karena kita ingin menampilkan gambar pada sebelah kanan EditText,
+        setCompoundDrawablesWithIntrinsicBounds(null, null, mClearButtonImage, null)
     }
     private fun hideClearButton() {
+        // hideClearButton diisi dengan null semua untuk menghilangkan gambar
         setCompoundDrawablesWithIntrinsicBounds(null, null, null, null)
     }
 
@@ -57,12 +59,15 @@ class MyEditText: AppCompatEditText, View.OnTouchListener {
         textAlignment = View.TEXT_ALIGNMENT_VIEW_START
     }
 
+    // ketika komponen ditekan, maka akan terbaca pada OnTouch
     override fun onTouch(v: View?, event: MotionEvent): Boolean {
         if (compoundDrawables[2] != null) {
             val clearButtonStart: Float
             val clearButtonEnd: Float
             var isClearButtonClicked = false
+            //dilakukan pengecekan apakah area yang ditekan adalah area tempat tombol silang berada. Jika iya maka isClearButtonClick akan kita tandai true
             when (layoutDirection) {
+                //pengecekan jenis handphone apakah menggunakan format RTL (Right-to-left) seperti bahasa Arab atau format LTR (Left-to-right) seperti bahasa Indonesia/Inggris
                 View.LAYOUT_DIRECTION_RTL -> {
                     clearButtonEnd = (mClearButtonImage.intrinsicWidth + paddingStart).toFloat()
                     when {
@@ -77,12 +82,15 @@ class MyEditText: AppCompatEditText, View.OnTouchListener {
                 }
             }
             when {
-                isClearButtonClicked -> when {
+                isClearButtonClicked ->
+                    when {
+                        // ketika aksi ACTION_DOWN (ketika tombol ditekan) tombol akan tetap tampil. dan menampilkan showClearButton
                     event.action == MotionEvent.ACTION_DOWN -> {
                         mClearButtonImage = ResourcesCompat.getDrawable(resources, R.drawable.ic_baseline_close_24, null) as Drawable
                         showClearButton()
                         return true
                     }
+                        //namun ketika ACTION_UP (ketika tombol dilepas setelah ditekan) teks yang di dalam EditText akan dihapus (clear) dan tombol silang akan disembunyikan dengan memanggil fungsi hideClearButton
                     event.action == MotionEvent.ACTION_UP -> {
                         mClearButtonImage = ResourcesCompat.getDrawable(resources, R.drawable.ic_baseline_close_24, null) as Drawable
                         when {
