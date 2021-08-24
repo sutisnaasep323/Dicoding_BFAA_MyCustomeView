@@ -25,8 +25,11 @@ class MyButton: AppCompatButton {
         init()
     }
 
+    // mengubah bentuk dari button
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
+
+        //memasukkan background dan attribute lain pada MyButton
         background = when {
             isEnabled -> enabledBackground
             else -> disabledBackground
